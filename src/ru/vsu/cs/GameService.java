@@ -63,25 +63,6 @@ public class GameService {
         }
     }
 
-//    public static int consoleCardDrop(Scanner scn, Player player){
-//        int cardNum;
-//        boolean isFound = false;
-//
-//        while (!isFound) {
-//            System.out.print("Введите карточку: ");
-//            cardNum = scn.nextInt();
-//            int index = searchCard(player.getDeck(), cardNum);
-//
-//            if(index != -1) {
-//                dropCard(player, cardNum);
-//                return cardNum;
-//            }
-//
-//            System.out.println("Такой карты не существует! Повторите ввод!");
-//        }
-//
-//        return -1;
-//    }
 
     public static Card consoleCardDrop(Scanner scn, Player player){
         int cardNum;
@@ -105,6 +86,7 @@ public class GameService {
 
     public static void startGame(int amount) {
         Scanner sc = new Scanner(System.in);
+
 
         Player player = spawnPlayer(amount);
         AI ai = (AI) spawnAI(amount, readBotType(sc));
@@ -138,8 +120,9 @@ public class GameService {
                 droppedCard = consoleCardDrop(sc, player);
                 playerCardValue = droppedCard.getAmount();
 
-                ai.rememberRemainingCards(droppedCard); //todo index : -1 ????
+
                 botCardValue = ai.makeTurn(isPlayerTurn);
+                ai.rememberRemainingCards(droppedCard, player.getDeck());
 
                 addPenalty(ai, calcPenalty(playerCardValue, botCardValue));
 
@@ -154,8 +137,10 @@ public class GameService {
 //                System.out.print(ConsoleUtils.BLUE + "Вы сейчас защищаетесь. " + ConsoleUtils.RESET);
                 droppedCard = consoleCardDrop(sc, player);
                 playerCardValue = droppedCard.getAmount();
-                ai.rememberRemainingCards(droppedCard);
+
                 botCardValue = ai.makeTurn(isPlayerTurn);
+                ai.rememberRemainingCards(droppedCard, player.getDeck());
+
                 addPenalty(player, calcPenalty(botCardValue, playerCardValue));
 //                System.out.print("Вы защитились на " + playerCardValue + "\nБот атаковал на " + botCardValue);
 //                System.out.print('\n');
@@ -197,6 +182,10 @@ public class GameService {
         System.out.println(ConsoleUtils.PURPLE + "Бот: " + ai.getPenalty() + ConsoleUtils.RESET);
     }
 
+    private  static void printSelectedBotType(String botType) {
+        System.out.println("Выбранный тип бота - " + botType);
+    }
+
     private static void printCurrentTurn(boolean isPlayerTurn) {
         if(isPlayerTurn) {
             System.out.print(ConsoleUtils.RED + "Вы сейчас атакуете. " + ConsoleUtils.RESET);
@@ -215,7 +204,8 @@ public class GameService {
     }
 
     private static String readBotType(Scanner sc) {
-        System.out.println("Тип бота : \n 1 - Атакующий \n 2 - Обороняющийся \n По умолчанию - Random " +
+        System.out.println("Тип бота : " + ConsoleUtils.RED + "\n 1 - Атакующий \n" +
+              ConsoleUtils.YELLOW + " 2 - Обороняющийся \n По умолчанию - Random " +
                 "\n Выберете тип бота : ");
         return sc.nextLine();
     }

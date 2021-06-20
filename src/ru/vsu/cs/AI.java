@@ -28,47 +28,61 @@ public class AI extends Player {
         this.prevDroppedCard = null;
     }
 
-    public void rememberRemainingCards(Card droppedCard) {
+    public void rememberRemainingCards(Card droppedCard, List<Card> playerDeck) {
         predicts.clear();
-        int index = playerDeck.indexOf(droppedCard);
-        playerDeck.remove(droppedCard);
+        int index = search(droppedCard.getAmount(), playerDeck);
         prevDroppedCard = droppedCard;
         if(prevDroppedCard != null) {
-            fillPredicts(index);
+            fillPredicts(index, this.playerDeck);
         }
     }
 
-    private void fillPredicts(int index) {
+    private void fillPredicts(int index, List<Card> playerDeck) {
         if (index == 0) {
             for (int i = 0; i < playerDeck.size(); i++) {
                 predicts.add(playerDeck.get(i));
             }
         } else if(index == predicts.size() - 1) {
             for (int i = predicts.size() - 1; i > 0; i++) {
-                predicts.add(playerDeck.get(i));
+                predicts.add(this.playerDeck.get(i));
             }
         } else {
             for (int i = index - 1; i < index + 1; i++) {
-                predicts.add(playerDeck.get(i));
+                predicts.add(this.playerDeck.get(i));
             }
         }
     }
 
+    private int search(int value, List<Card> playerDeck) {
+        for (int i = 0; i < this.playerDeck.size(); i++) {
+            if(this.playerDeck.get(i).getAmount() == value) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public int makeTurn(boolean defence) {
+        Random rnd = new Random();
         switch (this.tactics) {
             case RANDOM :
-                Random rnd = new Random();
                 int droppedIndex = rnd.nextInt(this.getDeck().size());
                 int cardNumber = this.getDeck().get(droppedIndex).getAmount();
                 this.getDeck().remove(droppedIndex);
                 return cardNumber;
             case AGGRESSIVE:
+                if(predicts.size() == 0) {
+                    return rnd.nextInt(this.getDeck().size());
+                }
                 if(defence) {
                     return predicts.get(0).getAmount();
                 } else {
                     return predicts.get(1).getAmount();
                 }
             case DEFENCIVE:
+                if(predicts.size() == 0) {
+                    return rnd.nextInt(this.getDeck().size());
+                }
                 if(defence) {
                     return predicts.get(1).getAmount();
                 } else {
