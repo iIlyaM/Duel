@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public class AI extends Player {
-    private List<Card> playerDeck; // оставшиеся карты противника
+    private List<Card> playerDeck;
     private List<Card> predicts;
     private Card prevDroppedCard;
     private Tactics tactics;
@@ -25,7 +25,7 @@ public class AI extends Player {
                 break;
         }
         this.playerDeck = List.copyOf(deck);
-        this.prevDroppedCard = null; //todo будет null на первом ходу
+        this.prevDroppedCard = null;
     }
 
     public void rememberRemainingCards(Card droppedCard) {
@@ -53,8 +53,8 @@ public class AI extends Player {
             }
         }
     }
-    //todo Поиграть со значениями, взять средней значение;
-    public int makeTurn(boolean defence) { //todo А не сделать ли return Card?
+
+    public int makeTurn(boolean defence) {
         switch (this.tactics) {
             case RANDOM :
                 Random rnd = new Random();

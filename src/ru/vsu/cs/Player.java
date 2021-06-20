@@ -1,6 +1,5 @@
 package ru.vsu.cs;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
@@ -8,7 +7,7 @@ public class Player {
     private int penalty;
 
     public Player(List<Card> deck) {
-        this.deck = new ArrayList<>();
+        this.deck = deck;
         this.penalty = 0;
     }
 
