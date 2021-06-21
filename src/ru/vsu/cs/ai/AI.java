@@ -45,7 +45,7 @@ public class AI extends Player {
             for (int i = 0; i < playerDeck.size(); i++) {
                 predicts.add(playerDeck.get(i));
             }
-        } else if(index == predicts.size() - 1) {
+        } else if(index == playerDeck.size() - 1) {
             for (int i = predicts.size() - 1; i > 0; i++) {
                 predicts.add(this.playerDeck.get(i));
             }
