@@ -1,4 +1,7 @@
-package ru.vsu.cs;
+package ru.vsu.cs.ai;
+
+import ru.vsu.cs.user.Card;
+import ru.vsu.cs.user.Player;
 
 import java.util.LinkedList;
 import java.util.List;

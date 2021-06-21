@@ -1,4 +1,9 @@
-package ru.vsu.cs;
+package ru.vsu.cs.service;
+
+import ru.vsu.cs.ai.AI;
+import ru.vsu.cs.user.Card;
+import ru.vsu.cs.user.Player;
+import ru.vsu.cs.utils.ConsoleUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +81,7 @@ public class GameService {
                 return dropCard(player, cardNum);
             }
 
-            System.out.println("Такой карты не существует! Повторите ввод!");
+            System.out.println("В колоде нет такой карты! Повторите ввод!");
         }
 
         return null;
@@ -94,7 +99,7 @@ public class GameService {
         Scanner sc = new Scanner(System.in);
 
         Player player = spawnPlayer(amount);
-        botType = readBotType(sc);
+        botType = readBotType(/*sc*/);
         AI ai = (AI) spawnAI(amount, botType);
 
         printSelectedBotType(botType);
@@ -194,11 +199,21 @@ public class GameService {
         System.out.print('\n');
     }
 
-    private static String readBotType(Scanner sc) {
-        System.out.println(ConsoleUtils.RESET + "Тип бота : " + ConsoleUtils.RED + "\n 1 - Атакующий \n" +
-              ConsoleUtils.BLUE + " 2 - Обороняющийся\n" + ConsoleUtils.YELLOW + "Enter - Random " +
-                ConsoleUtils.RESET + "\n Выберете тип бота : ");
-        return sc.nextLine();
+    private static String readBotType() {
+        Scanner scanner = new Scanner(System.in);
+        boolean correct = false;
+        while(!correct) {
+            System.out.println("\n Выберете тип бота. \n" + ConsoleUtils.RESET + "Типы бота : " + ConsoleUtils.RED +
+                    "\n Введите 1 - Атакующий \n" + ConsoleUtils.BLUE + " Введите 2 - Обороняющийся\n"
+                    + ConsoleUtils.YELLOW + "Нажмите Enter - Random ");
+            String type = scanner.nextLine();
+            if(!type.equals("") && !type.equals("1") && !type.equals("2")) {
+                System.out.println(ConsoleUtils.RED + "Ошибочный ввод, попробуйте ещё раз");
+            } else {
+                return type;
+            }
+        }
+        return null;
     }
 
     private static String askReplay() {
@@ -210,10 +225,10 @@ public class GameService {
     }
 
     private static boolean checkAnswer(String answer) {
-        if(answer.equalsIgnoreCase("y")) {
+        if(answer.equalsIgnoreCase("Y")) {
             return true;
         }
-        if(answer.equalsIgnoreCase("n")) {
+        if(answer.equalsIgnoreCase("N")) {
             return false;
         }
         return false;

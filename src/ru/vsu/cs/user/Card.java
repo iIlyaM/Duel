@@ -1,4 +1,4 @@
-package ru.vsu.cs;
+package ru.vsu.cs.user;
 
 public class Card {
     private int amount;
