@@ -3,6 +3,7 @@ package ru.vsu.cs.ai;
 import ru.vsu.cs.user.Card;
 import ru.vsu.cs.user.Player;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -10,6 +11,7 @@ import java.util.Random;
 public class AI extends Player {
     private List<Card> playerDeck;
     private List<Card> predicts;
+    private List<Card> deckList;
     private Card prevDroppedCard;
     private Tactics tactics;
 
@@ -28,37 +30,44 @@ public class AI extends Player {
                 break;
         }
         this.playerDeck = List.copyOf(deck);
+        this.deckList = deck;
         this.prevDroppedCard = null;
     }
 
     public void rememberRemainingCards(Card droppedCard, List<Card> playerDeck) {
         predicts.clear();
-        int index = search(droppedCard.getAmount(), playerDeck);
+        int index = search(droppedCard.getAmount(), this.deckList);
         prevDroppedCard = droppedCard;
-        if(prevDroppedCard != null) {
-            fillPredicts(index, this.playerDeck);
+        if(prevDroppedCard != null && tactics != Tactics.RANDOM) {
+            fillPredicts(index, this.deckList);
         }
     }
 
     private void fillPredicts(int index, List<Card> playerDeck) {
-        if (index == 0) {
-            for (int i = 0; i < playerDeck.size(); i++) {
-                predicts.add(playerDeck.get(i));
-            }
-        } else if(index == predicts.size() - 1) {
-            for (int i = predicts.size() - 1; i > 0; i++) {
-                predicts.add(this.playerDeck.get(i));
+        if (this.deckList.size() > 2) {
+            if (index == 0) {
+                for (int i = 1; i < 3; i++) {
+                    predicts.add(playerDeck.get(i));
+                }
+                this.deckList.remove(index);
+            } else if (index == playerDeck.size() - 1) {
+                for (int i = predicts.size() - 1; i > 0; i++) {
+                    predicts.add(playerDeck.get(i));
+                }
+                this.deckList.remove(index);
+            } else {
+                predicts.add(playerDeck.get(index - 1));
+                predicts.add(playerDeck.get(index + 1));
+                this.deckList.remove(index);
             }
         } else {
-            for (int i = index - 1; i < index + 1; i++) {
-                predicts.add(this.playerDeck.get(i));
-            }
+            predicts.addAll(playerDeck);
         }
     }
 
     private int search(int value, List<Card> playerDeck) {
-        for (int i = 0; i < this.playerDeck.size(); i++) {
-            if(this.playerDeck.get(i).getAmount() == value) {
+        for (int i = 0; i < playerDeck.size(); i++) {
+            if(playerDeck.get(i).getAmount() == value) {
                 return i;
             }
         }

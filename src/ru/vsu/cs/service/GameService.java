@@ -68,7 +68,7 @@ public class GameService {
         }
     }
 
-    public static Card consoleCardDrop(Scanner scn, Player player){
+    public static Card consoleCardDrop(Scanner scn, Player player) {
         int cardNum;
         boolean isFound = false;
 
@@ -77,7 +77,7 @@ public class GameService {
             cardNum = scn.nextInt();
             int index = searchCard(player.getDeck(), cardNum);
 
-            if(index != -1) {
+            if (index != -1) {
                 return dropCard(player, cardNum);
             }
 
@@ -87,7 +87,6 @@ public class GameService {
         return null;
     }
 
-
     public static void startGame(int amount) {
         String botType;
         int playerCardValue;
@@ -95,16 +94,16 @@ public class GameService {
         Card droppedCard;
         boolean isGameContinue = true;
 
-        while(isGameContinue) {
-        Scanner sc = new Scanner(System.in);
+        while (isGameContinue) {
+            Scanner sc = new Scanner(System.in);
 
-        Player player = spawnPlayer(amount);
-        botType = readBotType(/*sc*/);
-        AI ai = (AI) spawnAI(amount, botType);
+            Player player = spawnPlayer(amount);
+            botType = readBotType();
+            AI ai = (AI) spawnAI(amount, botType);
 
-        printSelectedBotType(botType);
+            printSelectedBotType(botType);
 
-        boolean isPlayerTurn = turnFirstAttacker();
+            boolean isPlayerTurn = turnFirstAttacker();
 
             for (int i = amount; i > 0; i--) {
 
@@ -144,7 +143,7 @@ public class GameService {
 
     private static void printResults(Player player, AI ai) {
         System.out.println("\n\n\n\n\n\n");
-        if(player.getPenalty() > ai.getPenalty())
+        if (player.getPenalty() > ai.getPenalty())
             System.out.println(ConsoleUtils.RED + "Вы проиграли!");
         else if (player.getPenalty() < ai.getPenalty())
             System.out.println(ConsoleUtils.CYAN + "Вы выиграли!");
@@ -156,11 +155,11 @@ public class GameService {
     }
 
     private static void printAttackResults(int playerCardValue, int botCardValue, boolean isPlayerTurn) {
-        if(isPlayerTurn) {
+        if (isPlayerTurn) {
             System.out.print("Вы атаковали на " + playerCardValue + "\nБот защитился на " + botCardValue);
             System.out.print('\n');
         }
-        if(!isPlayerTurn) {
+        if (!isPlayerTurn) {
             System.out.print("Вы защитились на " + playerCardValue + "\nБот атаковал на " + botCardValue);
             System.out.print('\n');
         }
@@ -172,10 +171,10 @@ public class GameService {
         System.out.println(ConsoleUtils.PURPLE + "Бот: " + ai.getPenalty() + ConsoleUtils.RESET);
     }
 
-    private  static void printSelectedBotType(String botType) {
-        if(botType.equals("1")) {
+    private static void printSelectedBotType(String botType) {
+        if (botType.equals("1")) {
             System.out.println("Выбранный тип бота - " + ConsoleUtils.RED + "AGGRESSIVE" + ConsoleUtils.RESET);
-        } else if(botType.equals("2")) {
+        } else if (botType.equals("2")) {
             System.out.println("Выбранный тип бота - " + ConsoleUtils.BLUE + "DEFENCIVE" + ConsoleUtils.RESET);
         } else {
             System.out.println("Выбранный тип бота - " + ConsoleUtils.YELLOW + "RANDOM" + ConsoleUtils.RESET);
@@ -183,10 +182,10 @@ public class GameService {
     }
 
     private static void printCurrentTurn(boolean isPlayerTurn) {
-        if(isPlayerTurn) {
+        if (isPlayerTurn) {
             System.out.print(ConsoleUtils.RED + "Вы сейчас атакуете. " + ConsoleUtils.RESET);
         }
-        if(!isPlayerTurn) {
+        if (!isPlayerTurn) {
             System.out.print(ConsoleUtils.BLUE + "Вы сейчас защищаетесь. " + ConsoleUtils.RESET);
         }
     }
@@ -202,12 +201,12 @@ public class GameService {
     private static String readBotType() {
         Scanner scanner = new Scanner(System.in);
         boolean correct = false;
-        while(!correct) {
+        while (!correct) {
             System.out.println("\n Выберете тип бота. \n" + ConsoleUtils.RESET + "Типы бота : " + ConsoleUtils.RED +
                     "\n Введите 1 - Атакующий \n" + ConsoleUtils.BLUE + " Введите 2 - Обороняющийся\n"
-                    + ConsoleUtils.YELLOW + "Нажмите Enter - Random ");
+                    + ConsoleUtils.YELLOW + "Нажмите Enter - Random " + ConsoleUtils.RESET);
             String type = scanner.nextLine();
-            if(!type.equals("") && !type.equals("1") && !type.equals("2")) {
+            if (!type.equals("") && !type.equals("1") && !type.equals("2")) {
                 System.out.println(ConsoleUtils.RED + "Ошибочный ввод, попробуйте ещё раз");
             } else {
                 return type;
@@ -220,15 +219,15 @@ public class GameService {
         Scanner scan = new Scanner(System.in);
         System.out.println(ConsoleUtils.RESET + "Хотите сыграть ещё раз? \n"
                 + ConsoleUtils.GREEN + "y - Да, ещё бы! \n" + ConsoleUtils.RED +
-                "n - Нет, воздержусь..." + ConsoleUtils.RESET +"\n Ваш выбор : " );
+                "n - Нет, воздержусь..." + ConsoleUtils.RESET + "\n Ваш выбор : ");
         return scan.nextLine();
     }
 
     private static boolean checkAnswer(String answer) {
-        if(answer.equalsIgnoreCase("Y")) {
+        if (answer.equalsIgnoreCase("Y")) {
             return true;
         }
-        if(answer.equalsIgnoreCase("N")) {
+        if (answer.equalsIgnoreCase("N")) {
             return false;
         }
         return false;
