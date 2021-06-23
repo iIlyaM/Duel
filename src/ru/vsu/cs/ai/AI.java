@@ -41,24 +41,27 @@ public class AI extends Player {
     }
 
     private void fillPredicts(int index, List<Card> playerDeck) {
-        if (index == 0) {
-            for (int i = 0; i < playerDeck.size(); i++) {
-                predicts.add(playerDeck.get(i));
-            }
-        } else if(index == predicts.size() - 1) {
-            for (int i = predicts.size() - 1; i > 0; i++) {
-                predicts.add(this.playerDeck.get(i));
+        if(this.getDeck().size() > 2) {
+            if (index == 0) {
+                for (int i = 0; i < playerDeck.size(); i++) {
+                    predicts.add(playerDeck.get(i));
+                }
+            } else if (index == playerDeck.size() - 1) {
+                for (int i = predicts.size() - 1; i > 0; i++) {
+                    predicts.add(this.playerDeck.get(i));
+                }
+            } else {
+                predicts.add(this.playerDeck.get(index - 1));
+                predicts.add(this.playerDeck.get(index + 1));
             }
         } else {
-            for (int i = index - 1; i < index + 1; i++) {
-                predicts.add(this.playerDeck.get(i));
-            }
+            predicts.addAll(playerDeck);
         }
     }
 
     private int search(int value, List<Card> playerDeck) {
-        for (int i = 0; i < this.playerDeck.size(); i++) {
-            if(this.playerDeck.get(i).getAmount() == value) {
+        for (int i = 0; i < playerDeck.size(); i++) {
+            if(playerDeck.get(i).getAmount() == value) {
                 return i;
             }
         }
