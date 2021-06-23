@@ -27,15 +27,16 @@ public class AI extends Player {
                 this.tactics = Tactics.DEFENCIVE;
                 break;
         }
-        this.playerDeck = List.copyOf(deck);
+        this.playerDeck = new LinkedList<>();
+        this.playerDeck.addAll(deck);
         this.prevDroppedCard = null;
     }
 
     public void rememberRemainingCards(Card droppedCard, List<Card> playerDeck) {
         predicts.clear();
-        int index = search(droppedCard.getAmount(), playerDeck);
+        int index = search(droppedCard.getAmount(), this.playerDeck);
         prevDroppedCard = droppedCard;
-        if(prevDroppedCard != null) {
+        if(index != -1) {
             fillPredicts(index, this.playerDeck);
         }
     }
@@ -46,22 +47,25 @@ public class AI extends Player {
                 for (int i = 0; i < playerDeck.size(); i++) {
                     predicts.add(playerDeck.get(i));
                 }
+                playerDeck.remove(index);
             } else if (index == playerDeck.size() - 1) {
                 for (int i = predicts.size() - 1; i > 0; i++) {
-                    predicts.add(this.playerDeck.get(i));
+                    predicts.add(playerDeck.get(i));
                 }
+                playerDeck.remove(index);
             } else {
-                predicts.add(this.playerDeck.get(index - 1));
-                predicts.add(this.playerDeck.get(index + 1));
+                predicts.add(playerDeck.get(index - 1));
+                predicts.add(playerDeck.get(index + 1));
+                playerDeck.remove(index);
             }
         } else {
-            predicts.addAll(playerDeck);
+            this.predicts.addAll(playerDeck);
         }
     }
 
     private int search(int value, List<Card> playerDeck) {
-        for (int i = 0; i < playerDeck.size(); i++) {
-            if(playerDeck.get(i).getAmount() == value) {
+        for (int i = 0; i < this.playerDeck.size(); i++) {
+            if(this.playerDeck.get(i).getAmount() == value) {
                 return i;
             }
         }
